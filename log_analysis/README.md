@@ -20,14 +20,17 @@ This feature analyzes WordPress logs (e.g., `wp-content/debug.log`) and server a
    ```
 4.  Replace the paths "`/path/to/your/wp-content/debug.log`" and "`/path/to/your/server/access.log`" with the actual paths to your logs.
 
-##  Enhancements:
 
-- Customizable Suspicious Patterns: Add the ability for users to define custom keywords or patterns (e.g., SQL injection attempts or file modification events).
-- IP Blacklisting: Automatically flag IPs that have been involved in multiple suspicious activities across different logs.
-- Log Timestamps: Track the exact time and date of suspicious activities for better forensics.
+## What the Script Does:
+
+### WordPress Log Analysis:
+- Parses the WordPress debug.log and looks for suspicious patterns such as errors, warnings, failed logins, or possible SQL injection attempts.
+- Logs are printed to the console with timestamps when suspicious activities are found.
+
+### Server Access Log Analysis:
+- Analyzes the server's access log (Apache or Nginx) for frequent IP addresses. IPs with over 10 requests are flagged as potential brute-force attempts.
+- The flagged IPs are printed to the console for review.
    
  
 ## Future Plans
-
-- Add detection for specific attack patterns (e.g., brute force login attempts).
 - Integrate with email alerts to notify admins of suspicious activity.
