@@ -24,7 +24,6 @@ This feature analyzes WordPress logs (e.g., `wp-content/debug.log`) and server a
 
 - Customizable Suspicious Patterns: Add the ability for users to define custom keywords or patterns (e.g., SQL injection attempts or file modification events).
 - IP Blacklisting: Automatically flag IPs that have been involved in multiple suspicious activities across different logs.
-- Email Notifications: Notify the admin via email when suspicious activity is detected.
 - Log Timestamps: Track the exact time and date of suspicious activities for better forensics.
    
  
