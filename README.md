@@ -5,7 +5,7 @@ A forensics toolkit designed to analyze WordPress installations, check file inte
 ## Features
 
 - [File Integrity Checking](file_integrity/) - Compare WordPress core files against a clean version to identify unauthorized changes.
-- [Log Analysis Checking] ([log_analysis/]) - detect suspicious activities such as errors, warnings, and potential brute-force attacks from frequent IP addresses.
+- [Log_Analysis](https://github.com/webpro255/WordPress-Forensics/tree/main/log_analysis) - detect suspicious activities such as errors, warnings, and potential brute-force attacks from frequent IP addresses.
 - Malware Detection (coming soon)
 - Database Forensics (coming soon)
 
