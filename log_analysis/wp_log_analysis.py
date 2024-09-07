@@ -1,33 +1,53 @@
-```python
 import os
 import re
+import smtplib
+from email.mime.text import MIMEText
+from datetime import datetime
+
+# Customizable suspicious patterns (keywords to detect)
+SUSPICIOUS_PATTERNS = ['error', 'warning', 'login failed', 'SQL', 'injection', 'file modification']
+
+# Function to send email notifications
+def send_email_notification(subject, message):
+    sender = "your_email@example.com"
+    recipient = "admin_email@example.com"
+    msg = MIMEText(message)
+    msg['Subject'] = subject
+    msg['From'] = sender
+    msg['To'] = recipient
+
+    # Send email (this is an example using Gmail, adjust for your SMTP provider)
+    try:
+        server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+        server.login(sender, "your_password")
+        server.sendmail(sender, recipient, msg.as_string())
+        server.quit()
+        print("Notification email sent successfully.")
+    except Exception as e:
+        print(f"Failed to send email: {e}")
 
 # Function to parse WordPress debug log
 def parse_wordpress_log(log_file):
     if not os.path.exists(log_file):
         print(f"Log file {log_file} not found.")
-        return
+        return []
 
     with open(log_file, 'r') as file:
         logs = file.readlines()
 
     suspicious_activities = []
     for line in logs:
-        if "error" in line.lower() or "warning" in line.lower():
-            suspicious_activities.append(line.strip())
+        if any(pattern.lower() in line.lower() for pattern in SUSPICIOUS_PATTERNS):
+            timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            suspicious_activities.append(f"[{timestamp}] {line.strip()}")
 
-    if suspicious_activities:
-        print("Suspicious activities found in WordPress log:")
-        for activity in suspicious_activities:
-            print(activity)
-    else:
-        print("No suspicious activities detected in WordPress log.")
+    return suspicious_activities
 
 # Function to parse Apache or Nginx access log
 def parse_server_access_log(log_file):
     if not os.path.exists(log_file):
         print(f"Log file {log_file} not found.")
-        return
+        return []
 
     suspicious_ips = {}
     with open(log_file, 'r') as file:
@@ -43,23 +63,39 @@ def parse_server_access_log(log_file):
     # Flag IPs that appear frequently (potential brute-force attempts)
     frequent_ips = {ip: count for ip, count in suspicious_ips.items() if count > 10}
     
-    if frequent_ips:
+    return frequent_ips
+
+# Main function to run log analysis and send alerts
+def main():
+    wordpress_log = "/path/to/your/wp-content/debug.log"  # Replace with actual path
+    server_log = "/path/to/your/server/access.log"  # Replace with actual path
+
+    # Analyze WordPress log
+    print("Analyzing WordPress log...")
+    wp_suspicious = parse_wordpress_log(wordpress_log)
+    if wp_suspicious:
+        print("Suspicious activities found in WordPress log:")
+        for activity in wp_suspicious:
+            print(activity)
+        
+        # Send email notification for WordPress log issues
+        send_email_notification("Suspicious Activities in WordPress Log", "\n".join(wp_suspicious))
+    else:
+        print("No suspicious activities detected in WordPress log.")
+
+    # Analyze server access log
+    print("\nAnalyzing server access log...")
+    server_suspicious = parse_server_access_log(server_log)
+    if server_suspicious:
         print("Potential brute force IPs found:")
-        for ip, count in frequent_ips.items():
+        for ip, count in server_suspicious.items():
             print(f"IP: {ip}, Requests: {count}")
+        
+        # Send email notification for suspicious IPs
+        ip_report = "\n".join([f"IP: {ip}, Requests: {count}" for ip, count in server_suspicious.items()])
+        send_email_notification("Suspicious IPs Detected", ip_report)
     else:
         print("No suspicious IPs detected in server access log.")
-
-# Main function to run both log analyses
-def main():
-    wordpress_log = "/path/to/your/wp-content/debug.log"  # Replace with the actual path to your WordPress debug log
-    server_log = "/path/to/your/server/access.log"  # Replace with the actual path to your server's access log
-
-    print("Analyzing WordPress log...")
-    parse_wordpress_log(wordpress_log)
-
-    print("\nAnalyzing server access log...")
-    parse_server_access_log(server_log)
 
 if __name__ == "__main__":
     main()
