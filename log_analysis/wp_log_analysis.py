@@ -1,30 +1,9 @@
 import os
 import re
-import smtplib
-from email.mime.text import MIMEText
 from datetime import datetime
 
 # Customizable suspicious patterns (keywords to detect)
 SUSPICIOUS_PATTERNS = ['error', 'warning', 'login failed', 'SQL', 'injection', 'file modification']
-
-# Function to send email notifications
-def send_email_notification(subject, message):
-    sender = "your_email@example.com"
-    recipient = "admin_email@example.com"
-    msg = MIMEText(message)
-    msg['Subject'] = subject
-    msg['From'] = sender
-    msg['To'] = recipient
-
-    # Send email (this is an example using Gmail, adjust for your SMTP provider)
-    try:
-        server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-        server.login(sender, "your_password")
-        server.sendmail(sender, recipient, msg.as_string())
-        server.quit()
-        print("Notification email sent successfully.")
-    except Exception as e:
-        print(f"Failed to send email: {e}")
 
 # Function to parse WordPress debug log
 def parse_wordpress_log(log_file):
@@ -65,7 +44,7 @@ def parse_server_access_log(log_file):
     
     return frequent_ips
 
-# Main function to run log analysis and send alerts
+# Main function to run log analysis
 def main():
     wordpress_log = "/path/to/your/wp-content/debug.log"  # Replace with actual path
     server_log = "/path/to/your/server/access.log"  # Replace with actual path
@@ -77,9 +56,6 @@ def main():
         print("Suspicious activities found in WordPress log:")
         for activity in wp_suspicious:
             print(activity)
-        
-        # Send email notification for WordPress log issues
-        send_email_notification("Suspicious Activities in WordPress Log", "\n".join(wp_suspicious))
     else:
         print("No suspicious activities detected in WordPress log.")
 
@@ -90,10 +66,6 @@ def main():
         print("Potential brute force IPs found:")
         for ip, count in server_suspicious.items():
             print(f"IP: {ip}, Requests: {count}")
-        
-        # Send email notification for suspicious IPs
-        ip_report = "\n".join([f"IP: {ip}, Requests: {count}" for ip, count in server_suspicious.items()])
-        send_email_notification("Suspicious IPs Detected", ip_report)
     else:
         print("No suspicious IPs detected in server access log.")
 
