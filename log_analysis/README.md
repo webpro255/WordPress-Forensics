@@ -3,9 +3,8 @@
 This feature analyzes WordPress logs (e.g., `wp-content/debug.log`) and server access logs (Apache or Nginx) to detect suspicious activities such as unauthorized logins, file modifications, or brute-force attacks.
 
 ## Features of the Log Analysis Script:
-
-    WordPress Log Parsing: It checks for "error" or "warning" keywords in the WordPress debug log to flag issues.
-    Server Access Log Parsing: It scans the access logs for frequent IPs (indicating brute force attacks or suspicious behavior).
+- WordPress Log Parsing: It checks for "error" or "warning" keywords in the WordPress debug log to flag issues.
+- Server Access Log Parsing: It scans the access logs for frequent IPs (indicating brute force attacks or suspicious behavior).
 
 ## Usage
 
