@@ -15,3 +15,7 @@ A forensics toolkit designed to analyze WordPress installations, check file inte
    ```bash
    git clone https://github.com/webpro255/WordPress-Forensics.git
    cd WordPress-Forensics
+2. Navigate to the feature directory and follow the specific instructions for each feature.
+
+## Contributing
+Feel free to fork this project, submit pull requests, or open issues for feature requests or bug fixes.
